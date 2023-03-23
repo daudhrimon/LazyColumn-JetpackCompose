@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,8 +26,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LazyColumnJetpackComposeTheme {
+
                 val textInput = remember { mutableStateOf("") }
-                val names = remember { mutableStateOf(listOf<String>()) }
+                val names = remember { mutableStateListOf<String>() }
 
                 Column(modifier = Modifier.fillMaxSize()) {
                     Card(
@@ -63,11 +65,11 @@ class MainActivity : ComponentActivity() {
                                 onClick = {
                                     when {
                                         textInput.value.isNotBlank() -> {
-                                            names.value = names.value + textInput.value
+                                            names.add(textInput.value)
                                             textInput.value = ""
                                         }
                                         else -> {
-                                            names.value = emptyList()
+                                            names.clear()
                                         }
                                     }
                                 }) {
@@ -77,7 +79,7 @@ class MainActivity : ComponentActivity() {
 
                         }
                     }
-                    if (names.value.isNotEmpty()) {
+                    if (names.isNotEmpty()) {
                         Card(
                             backgroundColor = Color.LightGray,
                             shape = RoundedCornerShape(14.dp),
@@ -86,7 +88,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(10.dp)
                         ) {
                             LazyColumn {
-                                items(names.value) { currentName ->
+                                items(names) { currentName ->
                                     Card(
                                         backgroundColor = Color.White,
                                         shape = RoundedCornerShape(10.dp),
